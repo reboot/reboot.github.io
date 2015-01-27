@@ -1,0 +1,121 @@
+--- gkrelldnet.c.orig	2003-08-04 21:43:52.000000000 +0200
++++ gkrelldnet.c	2004-06-25 20:31:41.000000000 +0200
+@@ -37,7 +37,7 @@
+ static GkrellmMonitor  *monitor;
+ static GkrellmPanel	*panel;
+ static GkrellmDecal    *decal_wu;
+-static GkrellmKrell    *krell_percent;
++static GkrellmKrell    *krell_percent[MAX_CPU];
+ static gint		style_id;
+ static gboolean mouse_in;
+ static GtkTooltips *tooltip = NULL;
+@@ -52,6 +52,7 @@
+ static gint gk_width, separator_len;
+ /* buf. for CPU percentage */
+ static ulonglong buf_cpu_val[MAX_CPU];
++static int buf_n_cpu;
+ 
+ /* config. and monitored value */
+ struct dnetc_monitor
+@@ -72,6 +73,37 @@
+ 	NULL
+ };
+ 
++static void create_krell(int num)
++{
++	GkrellmStyle      *style;
++	GkrellmPiximage   *krell_image;
++
++	style = gkrellm_meter_style(style_id);
++	krell_image = gkrellm_krell_meter_piximage(style_id);
++
++	krell_percent[num] = gkrellm_create_krell(panel, krell_image, style);
++	gkrellm_monotonic_krell_values(krell_percent[num], FALSE);
++	gkrellm_set_krell_full_scale(krell_percent[num], 100, 1);
++
++	gkrellm_insert_krell(panel, krell_percent[num], FALSE);
++}
++
++static void create_percentage_krells()
++{
++	int i;
++
++	for (i = 0; i < buf_n_cpu; i++)
++		if (krell_percent[i] == NULL)
++			create_krell(i);
++
++	for (i = buf_n_cpu; i < MAX_CPU; i++)
++		if (krell_percent[i] != NULL)
++		{
++			gkrellm_remove_krell(panel, krell_percent[i]);
++			gkrellm_destroy_krell(krell_percent[i]);
++		}
++}
++
+ /* update dnet values */
+ static void update_dnet2(void)
+ {
+@@ -99,6 +131,8 @@
+ 			dnetmon.shmem = NULL;
+ 			for(i=0;i<MAX_CPU;i++)
+ 		   		buf_cpu_val[i] = 0;
++			buf_n_cpu = 1;
++			create_percentage_krells();
+ 		}
+ 		else
+ 		{
+@@ -115,6 +149,11 @@
+ 				/* keep old value */
+ 				buf_cpu_val[i] = dnetmon.shmem->val_cpu[i];
+ 			}
++			if (buf_n_cpu != dnetmon.shmem->n_cpu)
++			{
++				buf_n_cpu = dnetmon.shmem->n_cpu;
++				create_percentage_krells();
++			}
+ 		}
+ 	}
+ }
+@@ -208,11 +247,14 @@
+ 
+ static void update_krells(void)
+ {
+-	if(dnetmon.shmem != NULL && dnetmon.shmem->cmode == CRUNCH_RELATIVE
+-		&& !mouse_in)
+-		gkrellm_update_krell(panel, krell_percent, dnetmon.shmem->val_cpu[0]);
+-	else
+-		gkrellm_update_krell(panel, krell_percent, 0);
++	int i;
++
++	for (i = 0; i < buf_n_cpu; i++)
++		if(dnetmon.shmem != NULL && dnetmon.shmem->cmode == CRUNCH_RELATIVE
++			&& !mouse_in)
++			gkrellm_update_krell(panel, krell_percent[i], dnetmon.shmem->val_cpu[i]);
++		else
++			gkrellm_update_krell(panel, krell_percent[i], 0);
+ }		
+ 
+ static void update_plugin(void)
+@@ -320,9 +362,7 @@
+ 	ts = gkrellm_panel_textstyle(style_id);
+ 	panel->textstyle = ts;
+ 
+-    krell_percent = gkrellm_create_krell(panel, krell_image, style);
+-	gkrellm_monotonic_krell_values(krell_percent, FALSE);
+-	gkrellm_set_krell_full_scale(krell_percent, 100, 1);
++    create_krell(0);
+ 
+ 	y = -1;
+ 	decal_wu = gkrellm_create_decal_text(panel,"gd8", ts, style, -1, -1, -1);
+@@ -580,7 +620,11 @@
+ 
+ 	/* init cpu values buffer */
+ 	for(i=0;i<MAX_CPU;i++)
++	{
+ 		buf_cpu_val[i] = 0;
++		krell_percent[i] = NULL;
++	}
++	buf_n_cpu = 1;
+ 
+ 	style_id = gkrellm_add_meter_style(&plugin_mon, STYLE_NAME);
+ 	monitor = &plugin_mon;

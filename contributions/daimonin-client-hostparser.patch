@@ -1,0 +1,71 @@
+--- client.orig/src/wrapper.c	2003-12-18 22:43:08.000000000 +0100
++++ client/src/wrapper.c	2006-05-01 00:00:33.000000000 +0200
+@@ -364,6 +364,37 @@
+         
+ }
+ 
++/* Parse server host into address and port 
++ * Allows URL style syntax with address in brackets
++ * for addresses which include colons
++ */
++int parse_serverhost(char *tmp, char *server, int *port)
++{
++    char *servstr, *portstr;
++
++    servstr = tmp;
++    portstr = servstr;
++    if(servstr[0] == '[') {
++        char *tmp;
++
++        tmp = strchr(++servstr, ']');
++        if (tmp == NULL)
++           return -1;
++        *tmp = '\0';
++        portstr = tmp+1;
++    }
++    portstr = strchr(portstr, ':');
++    if (portstr != NULL) {
++        *port = atoi(portstr + 1);
++        *portstr = '\0';
++    } else {
++        *port = 13327;
++    }
++    strcpy(server, servstr);
++
++    return 0;
++}
++
+ /* This is really, really a bad implementation.
+  * This is still weird test code and need a real code solution.
+  */
+@@ -371,7 +402,7 @@
+ {
+     char server[1024], version[1024],desc[1025], desc_line[4][47], *tmp;
+     int port, player, count,s,ss,sss;
+-	void *tmp_free;
++    void *tmp_free;
+     
+     tmp = (char*)malloc(MAX_METASTRING_BUFFER);
+     for(count=0;;)
+@@ -384,10 +415,11 @@
+             break;
+         if((s=read_substr_char(info, tmp, &count, '|'))==-1)
+             break;
+-        strncpy(server, tmp, s);
+         if(s>=1023)
+             s=1023;
+-        server[s]=0;
++        tmp[s]=0;
++        if(parse_serverhost(tmp, server, &port)==-1)
++            break;
+         /* player */
+         if((s=read_substr_char(info, tmp, &count, '|'))==-1)
+             break;
+@@ -426,7 +458,6 @@
+             desc_line[3][ss]=0;
+         }
+         read_substr_char(info, tmp, &count, 0x0a);
+-        port = 13327;
+         /*if(version[0] == 'D')*/ /* Daimonin marker */    
+ 		add_metaserver_data(server, port, player, version, &desc_line[0][0],&desc_line[1][0],&desc_line[2][0],&desc_line[3][0]);
+         

@@ -1,0 +1,91 @@
+---
+layout: default
+root: ../
+---
+
+<FONT size="+1"><B>NetDraw - A network drawing application in Java</B></FONT><BR/>
+&copy; <A href="mailto:reboot@gmx.ch">B.Sc. Christoph Hohmann</A><BR/>
+
+<P align="justify">
+<B>Introduction</B><BR/>
+NetDraw is a small application that allows an unlimited number of people
+to draw on the same virtual paper. Everyone can join the network and
+see what other people are drawing.
+</P>
+
+<P align="justify">
+<B>Purpose</B><BR/>
+Explaining things in words can sometimes be a real pain and a picture
+says more then thousand words. But starting a paint program, draw a
+sketch, upload it somewhere where other people can download and view
+it seemed to be too much work for a quick and dirty drawing that will
+be discarded after the other people have seen it. So the idea to have
+an application that allows other people to see directly what you are
+drawing was born. The result of the development is NetDraw. NetDraw does
+not only allow other people to see you drawing, but everyone can draw
+on the same paper. So if you make a sketch and someone has an idea how
+it could be modified he can make some changes to it too.
+</P>
+
+<P align="justify">
+<B>Usage</B><BR/>
+<TABLE align="right" cellpadding="4" cellspacing="1" bgcolor="black" style="margin-left: 16px">
+<TR><TD bgcolor="#999999">
+<IMG align="right" src="gui.png"/>
+</TD></TR>
+</TABLE>
+When you start NetDraw you will only have a small menu and the drawing
+area. You can start drawing immediately. But too bad noone will see what
+you are drawing. Every running NetDraw acts as server and client at
+the same time if the port it uses is not already in use. In that case
+it will only be a client. NetDraw uses the port 6346. This is actually
+the Gnutella port because I'm too lazy to forward another port on my
+NAT router. You can use the &quot;Connect&quot; menu entry to connect to
+other people running NetDraw or let other people connect to you. When you
+have connections to other NetDraws you will see the list of peers in the
+&quot;Disconnect&quot; menu. Selecting a connection from this menu will
+disconnect the peer from the network. You don't need a special server. You
+can create any kind of network you like. One NetDraw can work as a hub
+for all client or you can have a chain of clients where everyone is only
+connected to 2 other peers. Peers can join and leave the network at any
+time.
+</P>
+
+<P align="justify">
+<B>How it works</B><BR/>
+Whatever you draw is transmitted to the connected peers and the NetDraw
+there will perform the same operation.  Operations that are received from
+one peer will be retransmitted to the other peers that are connected.
+NetDraw only transmits the drawing operations and never the whole
+drawing. So if a peers joins the network after something has been drawn
+it will only see the things that are drawn after the peer joined. The
+peer can even have a totally different drawing before it joins. So you
+probably should clear the drawing from time to time and start over with
+a clear page for all clients from time to time.
+</P>
+
+<P align="justify">
+<B>Running NetDraw</B><BR/>
+NetDraw is a Java application to you need a Java Runtime Environment (JRE) or Software Development Kit to (SDK) run it.
+With an installed JRE/SDK you can run the NetDraw.jar file. On Windows you can do this from the explorer with a doubleclick.
+On other plattforms you can run it from the commandline with
+<TABLE cellpadding="4" cellspacing="2">
+    <TR>
+	<TD width="16"></TD>
+	<TD bgcolor="#eeeeee">java -jar NetDraw.jar</TD>
+    </TR>
+</TABLE>
+</P>
+
+<P>
+<B>Downloads</B><BR/>
+<TABLE cellpadding="4" cellspacing="0">
+    <TR bgcolor="#cccccc">
+	<TD>NetDraw</TD>
+	<TD><A href="NetDraw.jar">NetDraw 1.0</A></TD>
+    </TR>
+    <TR bgcolor="#aaaaaa">
+	<TD>Java JRE/SDK</TD>
+	<TD><A href="http://java.sun.com/j2se/1.4.2/download.html">Sun's Java Pages</A></TD>
+    </TR>
+</TABLE>

@@ -1,0 +1,131 @@
+diff -ruN snes9x-1.43-src/snes9x/snes9x.cpp snes9x-1.43-src-new/snes9x/snes9x.cpp
+--- snes9x-1.43-src/snes9x/snes9x.cpp	2004-12-30 23:15:47.000000000 +0100
++++ snes9x-1.43-src-new/snes9x/snes9x.cpp	2005-09-05 21:27:42.903588503 +0200
+@@ -200,6 +200,8 @@
+ -joydevX /dev/jsY         Use joystick device /dev/jsY for emulation of gamepad X\n");
+     S9xMessage (S9X_INFO, S9X_USAGE, "\
+ -joymapX 0 1 2 3 4 5 6 7  Joystick buttons which should be assigned to gamepad X - A B X Y TL TR Start and Select\n");
++    S9xMessage (S9X_INFO, S9X_USAGE, "\
++-joyaxisX 0 1             Joystick axis which should be assigned to gamepad X - X-Axis Y-Axis\n");
+ #else
+     S9xMessage (S9X_INFO, S9X_USAGE, "\
+ -four or -4               Single standard PC joystick has four buttons\n");
+diff -ruN  snes9x-1.43-src/snes9x/unix/unix.cpp snes9x-1.43-src-new/snes9x/unix/unix.cpp
+--- snes9x-1.43-src/snes9x/unix/unix.cpp	2004-12-30 23:15:47.000000000 +0100
++++ snes9x-1.43-src-new/snes9x/unix/unix.cpp	2005-09-05 21:24:04.605941573 +0200
+@@ -198,6 +198,21 @@
+     }
+ };
+ 
++int js_axis [4][2] = {
++    {
++	0, 1
++    },
++    {
++	0, 1
++    },
++    {
++	0, 1
++    },
++    {
++	0, 1
++    }
++};
++
+ #if 0
+ SNES_A_MASK, SNES_B_MASK, SNES_X_MASK, SNES_Y_MASK,
+ 		            SNES_TL_MASK, SNES_TR_MASK, SNES_START_MASK, SNES_SELECT_MASK,
+@@ -287,6 +302,18 @@
+ 	else
+ 	    S9xUsage ();
+     }
++    else if (strcasecmp (argv [i], "-joyaxis1") == 0)
++    {
++	if (i + 2 < argc)
++	{
++	    int t;
++
++	    if ((t = atoi (argv [++i])) < 15) js_axis [0][0] = t;
++	    if ((t = atoi (argv [++i])) < 15) js_axis [0][1] = t;
++	}
++	else
++	    S9xUsage ();
++    }
+     else if (strcasecmp (argv [i], "-joymap2") == 0)
+     {
+ 	if (i + 8 < argc)
+@@ -308,6 +335,18 @@
+ 	else
+ 	    S9xUsage ();
+     }
++    else if (strcasecmp (argv [i], "-joyaxis2") == 0)
++    {
++	if (i + 2 < argc)
++	{
++	    int t;
++
++	    if ((t = atoi (argv [++i])) < 15) js_axis [1][0] = t;
++	    if ((t = atoi (argv [++i])) < 15) js_axis [1][1] = t;
++	}
++	else
++	    S9xUsage ();
++    }
+     else if (strcasecmp (argv [i], "-joymap3") == 0)
+     {
+ 	if (i + 8 < argc)
+@@ -329,6 +368,18 @@
+ 	else
+ 	    S9xUsage ();
+     }
++    else if (strcasecmp (argv [i], "-joyaxis3") == 0)
++    {
++	if (i + 2 < argc)
++	{
++	    int t;
++
++	    if ((t = atoi (argv [++i])) < 15) js_axis [2][0] = t;
++	    if ((t = atoi (argv [++i])) < 15) js_axis [2][1] = t;
++	}
++	else
++	    S9xUsage ();
++    }
+     else if (strcasecmp (argv [i], "-joymap4") == 0)
+     {
+ 	if (i + 8 < argc)
+@@ -350,6 +401,18 @@
+ 	else
+ 	    S9xUsage ();
+     }
++    else if (strcasecmp (argv [i], "-joyaxis4") == 0)
++    {
++	if (i + 2 < argc)
++	{
++	    int t;
++
++	    if ((t = atoi (argv [++i])) < 15) js_axis [3][0] = t;
++	    if ((t = atoi (argv [++i])) < 15) js_axis [3][1] = t;
++	}
++	else
++	    S9xUsage ();
++    }
+     else 
+ #endif
+     if (strcasecmp (argv [i], "-b") == 0 ||
+@@ -767,7 +830,7 @@
+ 	    switch (js_ev.type & ~JS_EVENT_INIT)
+ 	    {
+ 	    case JS_EVENT_AXIS:
+-		if (js_ev.number == 0)
++		if (js_ev.number == js_axis[i][0])
+ 		{
+ 		    if(js_ev.value < -16384)
+ 		    {
+@@ -786,7 +849,7 @@
+ 		    break;	
+ 		}
+ 
+-		if (js_ev.number == 1)
++		if (js_ev.number == js_axis[i][1])
+ 		{
+ 		    if (js_ev.value < -16384)
+ 		    {

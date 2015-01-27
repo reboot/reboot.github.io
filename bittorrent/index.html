@@ -1,0 +1,69 @@
+---
+layout: default
+root: ../
+---
+
+<P><B>BitTorrent IPv6 Client</B></P>
+<P align="justify">
+Because I could not find any Peer2Peer Software that supports IPv6
+I decided to see if I could add support for it to one of the
+existing protocols. Adding this support BitTorrent seemed to be 
+easy, because the protocol does not make any restrictions what is
+transfers as the peer IP address. and I started to work on it.
+</P>
+<P align="justify">
+After 2 days the result is an IPv6 enabled BitTorrent peer client
+and tracker. You can download it from this page. For IPv6 support
+python2.3 is required.<BR>
+</P>
+<P align="justify">
+IPv6 support is available for the tracker and the peers.
+</P>
+<P align="justify">
+<B>IPv6 enabled Tracker:</B><BR>
+The tracker will accept IPv4 and IPv6 connections (if not
+bound to a specific address with --bind). The type of
+connection the peer makes to the tracker decides with type
+of IP is used in the peer list. Peers connecting through
+IPv4 connections will be listed with IPv4 address, IPv6
+connecting peers with IPv6, if they do not specify a
+different address with --ip.
+</P>
+<P align="justify">
+<B>IPv6 enabled Peer Client:</B><BR>
+The client can connect to IPv6 and IPv4 peers without
+problems.
+</P>
+<P align="justify">
+The type of connections to the peer depend on the type of
+address that is listed in the peer list from the tracker.
+<UL>
+    <LI>
+	If the peer is listed with IPv4 (either because it
+	connected to the tracker by IPv4 or used the --ip switch
+	with an IPv4) it will work like before (if not bound to
+	an IPv6 adress with --bind, what makes no sense).
+    </LI>
+    <LI>
+	If the peer ist listed with IPv6 (as above IPv6   
+	connection to tracker or --ip switch with IPv6) it only   
+	other IPv6 clients can make connections to it. The peer   
+        itself can still connect to other IPv4 clients, so it will  
+        perform like a firewalled client to IPv4 only peers. Even if
+        you do not have a IPv6 connection to the tracker you can use
+        the --ip switch to force your IPv6 address in the peer list
+        and IPv6 peers can communite over IPv6 when the tracker does
+        not support IPv6.
+    </LI>
+    <LI>
+	If the peer is listed with a domain name (with --ip
+        switch) peers should be able to connect with every IP
+        address associated with the domain name. So if the domain
+        has a A and AAAA entry IPv6 peers can connect via IPv6 and
+        IPv4 clients with IPv4.
+    </LI>
+</UL>
+</P>
+<P align="justify">
+Download: <A href="bittorrent.tar.bz2">bittorrent.tar.bz2</A><BR>
+</P>

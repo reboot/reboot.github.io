@@ -1,0 +1,237 @@
+---
+layout: default
+root: ../
+---
+
+<H2>Contributions</H2>
+
+<TABLE border="0" cellpadding="8" cellspacing="0">
+<TR bgcolor="#ff9999">
+<TD colspan="2">
+    <FONT size="+1"><B>Patches for Daimonin Client</B></FONT>
+</TD>
+</TR>
+<TR>
+<TD width="100%" valign="top">
+<P align="justify">
+Several patches to improve <A href="http://www.daimonin.net/">Daimonin</A>.
+<BR>
+<BR>
+<TABLE border="0" cellspacing="2" cellpadding="4" bgcolor="#000000">
+    <TR bgcolor="#bbbbbb">
+	<TD>Project Homepage</TD>
+	<TD><A href="http://www.daimonin.net/" target="_blank">http://www.daimonin.net/</A></TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Patch</TD>
+	<TD>
+	    <A href="daimonin-client-ipv6.patch">daimonin-client-ipv6.patch</A> (IPv6 support)<br/>
+	    <A href="daimonin-client-hostparser.patch">daimonin-client-hostparser.patch</A> (Host parser for metaserver data)<br/>
+	</TD>
+    </TD>
+    <TR bgcolor="#bbbbbb">
+	<TD>Submission date</TD>
+	<TD>-</TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Status</TD>
+	<TD>-</TD>
+    </TR>
+</TABLE>
+</P>
+<BR>
+</TD>
+</TR>
+
+<TR bgcolor="#ff9999">
+<TD colspan="2">
+    <FONT size="+1"><B>IPv6 Patch for Crossfire Client</B></FONT>
+</TD>
+</TR>
+<TR>
+<TD width="100%" valign="top">
+<P align="justify">
+This patch adds IPv6 support to the <A href="http://crossfire.real-time.com/">Crossfire</A> client.
+<BR>
+<BR>
+<TABLE border="0" cellspacing="2" cellpadding="4" bgcolor="#000000">
+    <TR bgcolor="#bbbbbb">
+	<TD>Project Homepage</TD>
+	<TD><A href="http://crossfire.real-time.com/" target="_blank">http://crossfire.real-time.com/</A></TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Patch</TD>
+	<TD><A href="crossfire-client-ipv6.patch">crossfire-client-ipv6.patch</A></TD>
+    </TD>
+    <TR bgcolor="#bbbbbb">
+	<TD>Submission date</TD>
+	<TD>5 Feb 2006</TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Status</TD>
+	<TD>Partially commited to CVS (not working)</TD>
+    </TR>
+</TABLE>
+</P>
+<BR>
+</TD>
+</TR>
+
+<TR bgcolor="#ff9999">
+<TD colspan="2">
+    <FONT size="+1"><B>Snes9x Joystick Axis Selection</B></FONT>
+</TD>
+</TR>
+<TR>
+<TD width="100%" valign="top">
+<P align="justify">
+With this patch you can specify which joystick axis should be mapped to the
+directions of the SNES gamepad in the <A href="http://www.snes9x.com/" target="_black">Snes9x</A>
+SNES emulator. The original code has axis 0 and 1 hardcoded and that was a
+analog stick on my gamepad which was not very good to use for the digital
+SNES gamepad. With this patch I could select the digital pad on my gamepad
+for this.
+<BR>
+<BR>
+<TABLE border="0" cellspacing="2" cellpadding="4" bgcolor="#000000">
+    <TR bgcolor="#bbbbbb">
+	<TD>Project Homepage</TD>
+	<TD><A href="http://www.snes9x.com/" target="_blank">http://www.snes9x.com/</A></TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Patch</TD>
+	<TD><A href="snes9x.patch">snes9x.patch</A></TD>
+    </TD>
+    <TR bgcolor="#bbbbbb">
+	<TD>Submission date</TD>
+	<TD>5 Sep 2005</TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Status</TD>
+	<TD>Waiting for answer from author</TD>
+    </TR>
+</TABLE>
+</P>
+<BR>
+</TD>
+</TR>
+
+<TR bgcolor="#ff9999">
+<TD colspan="2">
+    <FONT size="+1"><B>Liferea IPv6 support</B></FONT>
+</TD>
+</TR>
+<TR>
+<TD width="100%" valign="top">
+<P align="justify">
+This patch allows <A href="http://liferea.sourceforge.net/" target="_blank">Liferea</A> to connect
+to IPv6 hosts or proxy servers, by using the better <tt>getaddrinfo()</tt> function that
+returns <tt>sockinfo</tt>-structures for any kind of network protocol.
+<BR>
+<BR>
+<TABLE border="0" cellspacing="2" cellpadding="4" bgcolor="#000000">
+    <TR bgcolor="#bbbbbb">
+	<TD>Project Homepage</TD>
+	<TD><A href="http://liferea.sourceforge.net/" target="_blank">http://liferea.sourceforge.net/</A></TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Patch</TD>
+	<TD><A href="liferea-ipv6.patch">liferea-ipv6.patch</A></TD>
+    </TD>
+    <TR bgcolor="#bbbbbb">
+	<TD>Submission date</TD>
+	<TD>4 Sep 2004</TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Status</TD>
+	<TD>Included in Liferea 0.6.1</TD>
+    </TR>
+</TABLE>
+</P>
+<BR>
+</TD>
+<TD valign="top" align="right">
+<IMG src="liferea.png" width="169" height="88">
+</TD>
+</TR>
+
+<TR bgcolor="#ff9999">
+<TD colspan="2">
+    <FONT size="+1"><B>MaCoPiX Socket Message Feature</B></FONT>
+</TD>
+</TR>
+<TR>
+<TD width="100%" valign="top">
+<P align="justify">
+This patch  allows to send messages to the MaCoPiX window sitter that
+are then displayed in the mascot's balloon message. This can be used
+for various purposes. Every program that can run an external command
+for events can use this to make the mascot say a text. I use this for
+new mail notification from <A href="../sylpheed">Sylpheed-Claws</A>.
+<BR>
+<BR>
+<TABLE border="0" cellspacing="2" cellpadding="4" bgcolor="#000000">
+    <TR bgcolor="#bbbbbb">
+	<TD>Project Homepage</TD>
+	<TD><A href="http://kurumi.sakura.ne.jp/~chimari/macopix/index-e.html" target="_blank">http://kurumi.sakura.ne.jp/~chimari/macopix/index-e.html</A></TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Patch</TD>
+	<TD><A href="macopix-sockmsg.patch">macopix-sockmsg.patch</A></TD>
+    </TD>
+    <TR bgcolor="#bbbbbb">
+	<TD>Submission date</TD>
+	<TD>6 Jul 2004</TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Status</TD>
+	<TD>Included in MaCoPiX 1.2.0</TD>
+    </TR>
+</TABLE>
+</P>
+<BR>
+</TD>
+<TD valign="top" align="right">
+<IMG src="macopix.png" width="130" height="150">
+</TD>
+</TR>
+
+<TR bgcolor="#ff9999">
+<TD colspan="2">
+    <FONT size="+1"><B>GKrellDnet Multi CPU Krells</B></FONT>
+</TD>
+</TR>
+<TR>
+<TD width="100%" valign="top">
+<P align="justify">
+The GKrellDnet plugin for <A href="http://www.gkrellm.net/"
+target="_blank">GKrellM</A> only displayed the percentage-krell for the
+first CPU. With the patch the plugin displays a krell for every CPU.
+<BR>
+<BR>
+<TABLE border="0" cellspacing="2" cellpadding="4" bgcolor="#000000">
+    <TR bgcolor="#bbbbbb">
+	<TD>Project Homepage</TD>
+	<TD><A href="http://gkrelldnet.sourceforge.net/" target="_blank">http://gkrelldnet.sourceforge.net/</A></TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Patch</TD>
+	<TD><A href="gkrelldnet-multikrell.patch">gkrelldnet-multikrell.patch</A></TD>
+    </TD>
+    <TR bgcolor="#bbbbbb">
+	<TD>Submission date</TD>
+	<TD>25 Jun 2004</TD>
+    </TR>
+    <TR bgcolor="#dddddd">
+	<TD>Status</TD>
+	<TD>Included in GKrellDnet 0.14</TD>
+    </TR>
+</TABLE>
+</P>
+</TD>
+<TD valign="top" align="right">
+<IMG src="gkrelldnet.png" width="70" height="80">
+</TD>
+</TR>
+
+</TABLE>

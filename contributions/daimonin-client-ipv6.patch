@@ -1,0 +1,118 @@
+diff -Nur -x configure -x '*.o' -x '*.p0' -x '*.png' -x '*.log' -x '*.0' -x requests -x config.status -x Makefile -x options.dat -x define.h -x '*.tmp' -x 'client_*' client/make/linux/configure.in client-ipv6/make/linux/configure.in
+--- client/make/linux/configure.in	2004-12-18 16:44:24.000000000 +0100
++++ client-ipv6/make/linux/configure.in	2006-04-21 21:40:59.000000000 +0200
+@@ -53,7 +53,7 @@
+ AC_SUBST(SDL_CFLAGS, `${SDL_CONFIG} --cflags`)
+ AC_SUBST(SDL_LIBS, `${SDL_CONFIG} --libs`)
+ 
+-AC_CHECK_FUNCS(stricmp strnicmp strcasecmp strncasecmp)
++AC_CHECK_FUNCS(stricmp strnicmp strcasecmp strncasecmp getaddrinfo)
+ AC_CHECK_HEADERS([unistd.h])
+ AC_CHECK_HEADERS([fcntl.h])
+ 
+Binärdateien client/quick.dat and client-ipv6/quick.dat sind verschieden.
+Binärdateien client/src/daimonin and client-ipv6/src/daimonin sind verschieden.
+diff -Nur -x configure -x '*.o' -x '*.p0' -x '*.png' -x '*.log' -x '*.0' -x requests -x config.status -x Makefile -x options.dat -x define.h -x '*.tmp' -x 'client_*' client/src/include/define.h.in client-ipv6/src/include/define.h.in
+--- client/src/include/define.h.in	2003-12-18 22:43:08.000000000 +0100
++++ client-ipv6/src/include/define.h.in	2006-04-21 21:42:56.000000000 +0200
+@@ -30,6 +30,9 @@
+ /* Define to 1 if you have the `strncasecmp' function. */
+ #undef HAVE_STRNCASECMP
+ 
++/* Define to 1 if you have the `getaddrinfo' function. */
++#undef HAVE_GETADDRINFO
++
+ /* Define to 1 if you have the `strnicmp' function. */
+ #undef HAVE_STRNICMP
+ 
+diff -Nur -x configure -x '*.o' -x '*.p0' -x '*.png' -x '*.log' -x '*.0' -x requests -x config.status -x Makefile -x options.dat -x define.h -x '*.tmp' -x 'client_*' client/src/socket.c client-ipv6/src/socket.c
+--- client/src/socket.c	2004-05-13 18:14:10.000000000 +0200
++++ client-ipv6/src/socket.c	2006-04-23 21:14:24.000000000 +0200
+@@ -362,9 +362,10 @@
+ Boolean SOCKET_OpenSocket(SOCKET *socket_temp, struct ClientSocket *csock, char *host, int 
+ port)
+ {
+-        struct protoent *protox;
+         int oldbufsize, newbufsize=65535, buflen=sizeof(int), temp;
++#ifndef HAVE_GETADDRINFO
+         struct sockaddr_in insock;
++        struct protoent *protox;
+ 
+         printf("Opening to %s %i\n", host, port);
+         protox = getprotobyname("tcp");
+@@ -382,8 +383,6 @@
+                 *socket_temp = SOCKET_NO;
+                 return FALSE;
+         }
+-        csocket.inbuf.buf=(unsigned char *)_malloc(MAXSOCKBUF,"SOCKET_OpenSocket(): MAXSOCKBUF");
+-        csocket.inbuf.len=0;
+         insock.sin_family = AF_INET;
+         insock.sin_port = htons((unsigned short)port);
+         if (isdigit(*host))
+@@ -398,17 +397,61 @@
+                 }
+                 memcpy(&insock.sin_addr, hostbn->h_addr, hostbn->h_length);
+         }
+-        csock->command_sent=0;
+-        csock->command_received=0;
+-        csock->command_time=0;
+-
+-        temp = 1;	/* non-block*/
+ 
+         if (connect(*socket_temp,(struct sockaddr *)&insock,sizeof(insock)) == (-1))
+         {
+                 perror("Can't connect to server");
+                 return FALSE;
+         }
++#else
++	struct addrinfo hints;
++	struct addrinfo *res = NULL, *ai;
++	char port_str[6], hostaddr[40];
++
++        printf("Opening to %s %i\n", host, port);
++
++	snprintf(port_str, sizeof(port_str), "%d", port);
++
++	memset(&hints, 0, sizeof(hints));
++	hints.ai_family = AF_UNSPEC;
++	hints.ai_socktype = SOCK_STREAM;
++    
++	if (getaddrinfo(host, port_str, &hints, &res) != 0)
++		return FALSE;
++
++	for (ai = res; ai != NULL; ai = ai->ai_next) {
++		getnameinfo(ai->ai_addr, ai->ai_addrlen, hostaddr, sizeof(hostaddr), NULL, 0, NI_NUMERICHOST);
++		printf("  trying %s\n", hostaddr);
++
++		*socket_temp = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
++		if (*socket_temp == -1) {
++			*socket_temp = SOCKET_NO;
++			continue;
++		}
++
++		if (connect(*socket_temp, ai->ai_addr, ai->ai_addrlen) != 0) {
++			close(*socket_temp);
++			*socket_temp = SOCKET_NO;
++			continue;
++		}
++
++		break;
++	}
++
++	freeaddrinfo(res);
++	if (*socket_temp == SOCKET_NO) {
++                perror("Can't connect to server");
++		return FALSE;
++	}
++#endif
++
++        csock->command_sent=0;
++        csock->command_received=0;
++        csock->command_time=0;
++
++        csocket.inbuf.buf=(unsigned char *)_malloc(MAXSOCKBUF,"SOCKET_OpenSocket(): MAXSOCKBUF");
++        csocket.inbuf.len=0;
++
+         if (fcntl(*socket_temp, F_SETFL, O_NDELAY)==-1)
+         {
+                 fprintf(stderr,"InitConnection:  Error on fcntl.\n");
